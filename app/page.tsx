@@ -18,16 +18,33 @@ export default async function Home() {
     ? Math.round((completedTasks.length / thisWeekTasks.length) * 100)
     : 0
 
-  const totalHoursPlanned = thisWeekTasks.reduce(
-    (sum, wt) => sum + (wt.task.estimatedHours || 0), 0
+  // Calculate planned and unplanned hours
+  const plannedTasks = thisWeekTasks.filter(wt => !wt.unplanned)
+  const unplannedTasks = thisWeekTasks.filter(wt => wt.unplanned)
+
+  const plannedHours = plannedTasks.reduce(
+    (sum, wt) => sum + (wt.task?.estimatedHours || 0), 0
   )
+
+  const unplannedHours = unplannedTasks.reduce(
+    (sum, wt) => sum + (wt.unplannedHours || 0), 0
+  )
+
+  const totalHoursPlanned = plannedHours + unplannedHours
 
   const hoursCompleted = completedTasks.reduce(
-    (sum, wt) => sum + (wt.task.estimatedHours || 0), 0
+    (sum, wt) => {
+      if (wt.unplanned) {
+        return sum + (wt.unplannedHours || 0)
+      }
+      return sum + (wt.task?.estimatedHours || 0)
+    }, 0
   )
 
-  // Get IDs of tasks already added to this week
-  const addedTaskIds = thisWeekTasks.map(wt => wt.task.id)
+  // Get IDs of tasks already added to this week (exclude unplanned tasks)
+  const addedTaskIds = thisWeekTasks
+    .filter(wt => !wt.unplanned && wt.task)
+    .map(wt => wt.task!.id)
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -45,6 +62,8 @@ export default async function Home() {
             completionRate={completionRate}
             totalHoursPlanned={totalHoursPlanned}
             hoursCompleted={hoursCompleted}
+            plannedHours={plannedHours}
+            unplannedHours={unplannedHours}
           />
 
           <AllTasksSection tasks={allTasks} addedTaskIds={addedTaskIds} />

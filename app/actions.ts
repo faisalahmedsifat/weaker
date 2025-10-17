@@ -67,24 +67,27 @@ export async function toggleTaskCompletion(weeklyTaskId: number) {
     }
   })
 
-  // If completing the task, archive the underlying Task
-  if (isCompleting) {
-    await prisma.task.update({
-      where: { id: weeklyTask.taskId },
-      data: {
-        archived: true,
-        archivedAt: new Date()
-      }
-    })
-  } else {
-    // If uncompleting, unarchive the Task
-    await prisma.task.update({
-      where: { id: weeklyTask.taskId },
-      data: {
-        archived: false,
-        archivedAt: null
-      }
-    })
+  // Only update the underlying Task if this is a planned task (has taskId)
+  if (weeklyTask.taskId) {
+    // If completing the task, archive the underlying Task
+    if (isCompleting) {
+      await prisma.task.update({
+        where: { id: weeklyTask.taskId },
+        data: {
+          archived: true,
+          archivedAt: new Date()
+        }
+      })
+    } else {
+      // If uncompleting, unarchive the Task
+      await prisma.task.update({
+        where: { id: weeklyTask.taskId },
+        data: {
+          archived: false,
+          archivedAt: null
+        }
+      })
+    }
   }
 
   revalidatePath('/')
@@ -150,4 +153,22 @@ export async function unarchiveTask(taskId: number) {
     }
   })
   revalidatePath('/')
+}
+
+// Add unplanned task directly to this week
+export async function addUnplannedTask(data: {
+  name: string
+  estimatedHours?: number
+  category: string
+}) {
+  const weeklyTask = await prisma.weeklyTask.create({
+    data: {
+      unplanned: true,
+      unplannedName: data.name,
+      unplannedHours: data.estimatedHours,
+      unplannedCategory: data.category
+    }
+  })
+  revalidatePath('/')
+  return weeklyTask
 }

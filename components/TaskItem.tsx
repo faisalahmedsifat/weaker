@@ -21,6 +21,7 @@ interface TaskItemProps {
   weeklyTaskId?: number
   completed?: boolean
   inProgress?: boolean
+  unplanned?: boolean
   onToggle?: () => void
   onToggleInProgress?: () => void
   onAdd?: () => void
@@ -33,6 +34,7 @@ export default function TaskItem({
   task,
   completed = false,
   inProgress = false,
+  unplanned = false,
   onToggle,
   onToggleInProgress,
   onAdd,
@@ -81,6 +83,12 @@ export default function TaskItem({
           {inProgress && (
             <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
               ⚡ In Progress
+            </span>
+          )}
+
+          {unplanned && (
+            <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+              ⚠️ Unplanned
             </span>
           )}
 
