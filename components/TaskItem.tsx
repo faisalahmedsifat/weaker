@@ -20,7 +20,9 @@ interface TaskItemProps {
   task: Task
   weeklyTaskId?: number
   completed?: boolean
+  inProgress?: boolean
   onToggle?: () => void
+  onToggleInProgress?: () => void
   onAdd?: () => void
   showCheckbox?: boolean
   showAddButton?: boolean
@@ -30,7 +32,9 @@ interface TaskItemProps {
 export default function TaskItem({
   task,
   completed = false,
+  inProgress = false,
   onToggle,
+  onToggleInProgress,
   onAdd,
   showCheckbox = false,
   showAddButton = false,
@@ -38,12 +42,13 @@ export default function TaskItem({
 }: TaskItemProps) {
   return (
     <div className={`
-      flex items-center justify-between p-3 rounded-lg border
+      flex items-center justify-between p-3 rounded-lg border-2 transition
       ${completed
         ? 'bg-gray-50 dark:bg-gray-700/30 border-gray-200 dark:border-gray-600'
-        : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600'
+        : inProgress
+        ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-400 dark:border-amber-500 shadow-md'
+        : 'bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 hover:shadow-md'
       }
-      hover:shadow-md transition
     `}>
       <div className="flex items-center gap-3 flex-1">
         {showCheckbox && (
@@ -56,23 +61,36 @@ export default function TaskItem({
         )}
 
         <div className="flex-1">
-          <p className={`font-medium ${completed ? 'line-through text-gray-500' : 'text-gray-900 dark:text-white'}`}>
-            {task.name}
-          </p>
-
-          {task.estimatedHours && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              {task.estimatedHours}h
+          <div
+            onClick={onToggleInProgress}
+            className={`${onToggleInProgress ? 'cursor-pointer' : ''}`}
+          >
+            <p className={`font-medium ${completed ? 'line-through text-gray-500' : 'text-gray-900 dark:text-white'}`}>
+              {task.name}
             </p>
-          )}
+
+            {task.estimatedHours && (
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                {task.estimatedHours}h
+              </p>
+            )}
+          </div>
         </div>
 
-        <span className={`
-          px-2 py-1 text-xs font-medium rounded-full
-          ${categoryColors[task.category] || categoryColors.Admin}
-        `}>
-          {task.category}
-        </span>
+        <div className="flex items-center gap-2">
+          {inProgress && (
+            <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200">
+              ⚡ In Progress
+            </span>
+          )}
+
+          <span className={`
+            px-2 py-1 text-xs font-medium rounded-full
+            ${categoryColors[task.category] || categoryColors.Admin}
+          `}>
+            {task.category}
+          </span>
+        </div>
       </div>
 
       {showAddButton && (

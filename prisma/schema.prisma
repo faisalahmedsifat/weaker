@@ -26,6 +26,7 @@ model WeeklyTask {
   taskId      Int
   completed   Boolean   @default(false)
   completedAt DateTime?
+  inProgress  Boolean   @default(false)
   addedAt     DateTime  @default(now())
 
   task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)

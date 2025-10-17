@@ -90,6 +90,33 @@ export async function toggleTaskCompletion(weeklyTaskId: number) {
   revalidatePath('/')
 }
 
+// Toggle task in-progress status (only one task can be in progress at a time)
+export async function toggleInProgress(weeklyTaskId: number) {
+  const weeklyTask = await prisma.weeklyTask.findUnique({
+    where: { id: weeklyTaskId }
+  })
+
+  if (!weeklyTask) return
+
+  const willBeInProgress = !weeklyTask.inProgress
+
+  // If marking as in-progress, first set all other tasks to not in-progress
+  if (willBeInProgress) {
+    await prisma.weeklyTask.updateMany({
+      where: { id: { not: weeklyTaskId } },
+      data: { inProgress: false }
+    })
+  }
+
+  // Toggle the current task's in-progress status
+  await prisma.weeklyTask.update({
+    where: { id: weeklyTaskId },
+    data: { inProgress: willBeInProgress }
+  })
+
+  revalidatePath('/')
+}
+
 // Clear completed tasks
 export async function clearCompletedTasks() {
   await prisma.weeklyTask.deleteMany({

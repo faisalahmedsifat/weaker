@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { toggleTaskCompletion, clearCompletedTasks, startNewWeek } from '@/app/actions'
+import { toggleTaskCompletion, toggleInProgress, clearCompletedTasks, startNewWeek } from '@/app/actions'
 import TaskItem from './TaskItem'
 import WeeklyStats from './WeeklyStats'
 
@@ -17,6 +17,7 @@ interface WeeklyTask {
   taskId: number
   completed: boolean
   completedAt: Date | null
+  inProgress: boolean
   addedAt: Date
   task: Task
 }
@@ -72,16 +73,20 @@ export default function ThisWeekSection({
           </p>
         ) : (
           <div className="space-y-2">
-            {activeTasks.map((wt) => (
-              <TaskItem
-                key={wt.id}
-                task={wt.task}
-                weeklyTaskId={wt.id}
-                completed={wt.completed}
-                onToggle={() => toggleTaskCompletion(wt.id)}
-                showCheckbox={true}
-              />
-            ))}
+            {[...activeTasks]
+              .sort((a, b) => (b.inProgress ? 1 : 0) - (a.inProgress ? 1 : 0))
+              .map((wt) => (
+                <TaskItem
+                  key={wt.id}
+                  task={wt.task}
+                  weeklyTaskId={wt.id}
+                  completed={wt.completed}
+                  inProgress={wt.inProgress}
+                  onToggle={() => toggleTaskCompletion(wt.id)}
+                  onToggleInProgress={() => toggleInProgress(wt.id)}
+                  showCheckbox={true}
+                />
+              ))}
           </div>
         )}
       </div>
