@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id              Int         @id @default(autoincrement())
+  name            String
+  estimatedHours  Float?
+  category        String
+  archived        Boolean     @default(false)
+  archivedAt      DateTime?
+  createdAt       DateTime    @default(now())
+
+  weeklyTasks     WeeklyTask[]
+}
+
+model WeeklyTask {
+  id          Int       @id @default(autoincrement())
+  taskId      Int
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  addedAt     DateTime  @default(now())
+
+  task        Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+model WeekMetadata {
+  id          Int      @id @default(autoincrement())
+  weekStart   DateTime @unique
+  createdAt   DateTime @default(now())
+}
