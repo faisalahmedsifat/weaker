@@ -11,7 +11,7 @@ export default function AddTaskForm({ onSubmit, onCancel }: AddTaskFormProps) {
   const [formData, setFormData] = useState({
     name: '',
     estimatedHours: '',
-    category: 'PhD'
+    category: ''
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +21,7 @@ export default function AddTaskForm({ onSubmit, onCancel }: AddTaskFormProps) {
       estimatedHours: formData.estimatedHours ? parseFloat(formData.estimatedHours) : undefined,
       category: formData.category
     })
-    setFormData({ name: '', estimatedHours: '', category: 'PhD' })
+    setFormData({ name: '', estimatedHours: '', category: '' })
   }
 
   return (
@@ -45,18 +45,23 @@ export default function AddTaskForm({ onSubmit, onCancel }: AddTaskFormProps) {
           className="px-3 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500 dark:text-white"
         />
 
-        <select
+        <input
+          type="text"
+          list="category-suggestions"
+          placeholder="Category"
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           className="px-3 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500 dark:text-white"
-        >
-          <option>PhD</option>
-          <option>Test Project</option>
-          <option>Dev</option>
-          <option>Life</option>
-          <option>Flat</option>
-          <option>Admin</option>
-        </select>
+          required
+        />
+        <datalist id="category-suggestions">
+          <option value="PhD" />
+          <option value="Test Project" />
+          <option value="Dev" />
+          <option value="Life" />
+          <option value="Flat" />
+          <option value="Admin" />
+        </datalist>
       </div>
 
       <div className="flex gap-2 mt-3">

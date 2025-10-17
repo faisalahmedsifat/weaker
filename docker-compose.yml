@@ -3,20 +3,31 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: deps  # Use deps stage for development
     ports:
       - "3000:3000"
     volumes:
       # Mount SQLite database directory
       - ./data:/app/data
-      # For development hot reload
-      - .:/app
-      - /app/node_modules
-      - /app/.next
+      # For development hot reload - mount source files only
+      - ./app:/app/app
+      - ./components:/app/components
+      - ./lib:/app/lib
+      - ./prisma:/app/prisma
+      - ./public:/app/public
+      - ./tailwind.config.ts:/app/tailwind.config.ts
+      - ./postcss.config.js:/app/postcss.config.js
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./next.config.js:/app/next.config.js
+      - ./next-env.d.ts:/app/next-env.d.ts
+      - ./.env:/app/.env:ro
+      # Exclude node_modules and .next from host mount
     environment:
       - NODE_ENV=development
       - DATABASE_URL=file:/app/data/planner.db
-    command: sh -c "npx prisma migrate dev && npm run dev"
+    command: sh -c "npx prisma generate && npx prisma migrate dev && npm run dev"
     restart: unless-stopped
+    # Run as root in development to avoid permission issues with mounted volumes
 
   # Production service
   app-prod:
