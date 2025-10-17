@@ -24,6 +24,7 @@ interface TaskItemProps {
   onAdd?: () => void
   showCheckbox?: boolean
   showAddButton?: boolean
+  isAdded?: boolean
 }
 
 export default function TaskItem({
@@ -32,7 +33,8 @@ export default function TaskItem({
   onToggle,
   onAdd,
   showCheckbox = false,
-  showAddButton = false
+  showAddButton = false,
+  isAdded = false
 }: TaskItemProps) {
   return (
     <div className={`
@@ -76,9 +78,14 @@ export default function TaskItem({
       {showAddButton && (
         <button
           onClick={onAdd}
-          className="ml-3 px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+          disabled={isAdded}
+          className={`ml-3 px-3 py-1 text-sm rounded transition ${
+            isAdded
+              ? 'bg-gray-300 text-gray-500 dark:bg-gray-600 dark:text-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 text-white hover:bg-blue-700'
+          }`}
         >
-          + Add
+          {isAdded ? '✓ Added' : '+ Add'}
         </button>
       )}
     </div>

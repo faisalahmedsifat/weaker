@@ -26,6 +26,9 @@ export default async function Home() {
     (sum, wt) => sum + (wt.task.estimatedHours || 0), 0
   )
 
+  // Get IDs of tasks already added to this week
+  const addedTaskIds = thisWeekTasks.map(wt => wt.task.id)
+
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-6xl mx-auto p-4 md:p-8">
@@ -44,7 +47,7 @@ export default async function Home() {
             hoursCompleted={hoursCompleted}
           />
 
-          <AllTasksSection tasks={allTasks} />
+          <AllTasksSection tasks={allTasks} addedTaskIds={addedTaskIds} />
         </div>
 
         <div className="mt-8">

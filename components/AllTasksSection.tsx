@@ -14,9 +14,10 @@ interface Task {
 
 interface AllTasksSectionProps {
   tasks: Task[]
+  addedTaskIds: number[]
 }
 
-export default function AllTasksSection({ tasks }: AllTasksSectionProps) {
+export default function AllTasksSection({ tasks, addedTaskIds }: AllTasksSectionProps) {
   const [showAddForm, setShowAddForm] = useState(false)
 
   return (
@@ -56,6 +57,7 @@ export default function AllTasksSection({ tasks }: AllTasksSectionProps) {
               task={task}
               onAdd={() => addToThisWeek(task.id)}
               showAddButton={true}
+              isAdded={addedTaskIds.includes(task.id)}
             />
           ))
         )}
