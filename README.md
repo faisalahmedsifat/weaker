@@ -8,7 +8,7 @@ A minimalist weekly task planning application designed for INTP-T productivity p
 - **Weekly Planning**: Select tasks for the current week
 - **Progress Tracking**: Visual progress bar and completion statistics
 - **Hour Estimation**: Track estimated and completed hours
-- **Category Management**: Organize tasks by category (PhD, Jomidaar, Dev, Life, Flat, Admin)
+- **Category Management**: Organize tasks by category (PhD, Test Project, Dev, Life, Flat, Admin)
 - **Dark Mode Support**: System-preference aware dark mode
 - **Responsive Design**: Works on mobile and desktop
 

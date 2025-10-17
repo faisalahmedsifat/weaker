@@ -51,7 +51,7 @@ export default function AddTaskForm({ onSubmit, onCancel }: AddTaskFormProps) {
           className="px-3 py-2 border rounded-lg dark:bg-gray-600 dark:border-gray-500 dark:text-white"
         >
           <option>PhD</option>
-          <option>Jomidaar</option>
+          <option>Test Project</option>
           <option>Dev</option>
           <option>Life</option>
           <option>Flat</option>
