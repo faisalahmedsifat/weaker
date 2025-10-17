@@ -9,6 +9,8 @@ A minimalist weekly task planning application designed for INTP-T productivity p
 - **Progress Tracking**: Visual progress bar and completion statistics
 - **Hour Estimation**: Track estimated and completed hours
 - **Category Management**: Organize tasks by category (PhD, Test Project, Dev, Life, Flat, Admin)
+- **Automatic Archiving**: Completed tasks are automatically archived and removed from active tasks
+- **Archive Management**: View archived tasks, restore them, or delete permanently
 - **Dark Mode Support**: System-preference aware dark mode
 - **Responsive Design**: Works on mobile and desktop
 
@@ -143,6 +145,8 @@ Master repository of reusable task templates
 - `name`: Task name
 - `estimatedHours`: Optional time estimate
 - `category`: Task category
+- `archived`: Boolean flag (auto-set when task is completed)
+- `archivedAt`: Timestamp when task was archived
 - `createdAt`: Creation timestamp
 
 ### WeeklyTask
@@ -164,16 +168,24 @@ Tracks week start dates for history feature
 1. **Create Tasks**: Click "+ New Task" in the "All Tasks" section to add reusable tasks to your repository
 2. **Add to Week**: Click "+ Add" next to any task to add it to your current week
 3. **Track Progress**: Check off tasks as you complete them
+   - When you complete a task, it's automatically archived and removed from "All Tasks"
 4. **View Statistics**: Monitor your completion rate and hours in the progress bar
-5. **Start New Week**: Click "Start New Week" to clear all weekly tasks and begin fresh
-6. **Clear Completed**: Remove completed tasks while keeping active ones
+5. **Manage Archive**:
+   - View archived tasks in the collapsible "Archived Tasks" section
+   - Click "Restore" to move a task back to active repository
+   - Click "Delete" to permanently remove an archived task
+6. **Start New Week**: Click "Start New Week" to clear all weekly tasks and begin fresh
+7. **Clear Completed**: Remove completed tasks while keeping active ones
 
 ## Key Design Decisions
 
 - **Reusable Tasks**: Tasks can be added to the week multiple times (e.g., "IELTS prep" for different days)
+- **Automatic Archiving**: Completing a task automatically archives it, removing it from the active repository
+- **Flexible Archive**: Archived tasks can be restored or permanently deleted
 - **Cascade Delete**: Deleting a task from the repository removes it from the current week
 - **Server Actions**: All mutations use Next.js Server Actions with automatic revalidation
 - **SQLite**: Single-file database suitable for personal use
+- **Docker Ready**: Includes OpenSSL configuration for Alpine Linux compatibility
 - **No Authentication**: Single-user application (add auth if needed for multi-user)
 
 ## Environment Variables

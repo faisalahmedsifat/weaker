@@ -2,7 +2,7 @@ FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat openssl
+RUN apk add --no-cache libc6-compat openssl openssl-dev
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
@@ -11,10 +11,12 @@ RUN npm ci
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+# Install OpenSSL for Prisma
+RUN apk add --no-cache libc6-compat openssl openssl-dev
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client
+# Generate Prisma Client (using binaryTargets from schema.prisma)
 RUN npx prisma generate
 
 # Build Next.js
@@ -24,6 +26,9 @@ RUN npm run build
 # Production image
 FROM base AS runner
 WORKDIR /app
+
+# Install OpenSSL for Prisma runtime
+RUN apk add --no-cache libc6-compat openssl openssl-dev
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1

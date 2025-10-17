@@ -3,6 +3,9 @@ import ThisWeekSection from '@/components/ThisWeekSection'
 import AllTasksSection from '@/components/AllTasksSection'
 import ArchivedTasksSection from '@/components/ArchivedTasksSection'
 
+// Force dynamic rendering since this is a task manager with dynamic data
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const allTasks = await getAllTasks()
   const thisWeekTasks = await getThisWeekTasks()
